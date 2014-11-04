@@ -1,4 +1,4 @@
-# angular-busy [![Build Status](https://travis-ci.org/cgross/angular-busy.png?branch=master)](https://travis-ci.org/cgross/angular-busy)
+# angular-busy [![Build Status](https://travis-ci.org/Momepukku/angular-busy.svg)](https://travis-ci.org/Momepukku/angular-busy)
 
 > Show busy/loading indicators on any $http or $resource request, or on any promise.
 

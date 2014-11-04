@@ -38,6 +38,56 @@ describe('cgBusy', function() {
 		expect(this.element.children().css('display')).toBe('none'); //ensure its now invisible as the promise is resolved
 	});
 
+	it('should append backdrop to the target', function() {
+
+		this.element = compile('<div cg-busy="{promise:my_promise, backdrop:true, backdropAppendTo:\'div.my-target\'}"></div>')(scope);
+		angular.element('body').append(angular.element('<div class="my-target"><span>this is my backdrop target<span></div>'));
+		angular.element('body').append(this.element);
+
+		expect(angular.element(document.querySelector('div.my-target')).children().length).toBe(1); //ensure the target before add
+
+		this.testPromise = q.defer();
+		scope.my_promise = this.testPromise.promise;
+
+		//httpBackend.flush();
+
+		scope.$apply();
+
+		expect(angular.element(document.querySelector('div.my-target')).children().length).toBe(2); //ensure the backdrop are added to target
+		
+		expect(this.element.children().css('display')).toBe('block');//ensure its visible (promise is ongoing)
+
+		this.testPromise.resolve();
+		scope.$apply();
+
+		expect(this.element.children().css('display')).toBe('none'); //ensure its now invisible as the promise is resolved
+	});
+
+	it('should add css class specify via "options.animationClass" to ".cg-busy-animation"', function() {
+
+		this.element = compile('<div cg-busy="{promise:my_promise, backdrop:true, animationClass:\'my-template-class\'}"></div>')(scope);
+		angular.element('body').append(this.element);
+
+		expect(angular.element(document.querySelectorAll('.my-template-class')).length).toBe(0);
+
+		this.testPromise = q.defer();
+		scope.my_promise = this.testPromise.promise;
+
+		//httpBackend.flush();
+
+		scope.$apply();
+
+		expect(angular.element(document.querySelectorAll('.my-template-class')).length).toBe(1);
+		expect(angular.element(document.querySelectorAll('.my-template-class.cg-busy-animation')).length).toBe(1);
+		
+		expect(this.element.children().css('display')).toBe('block');//ensure its visible (promise is ongoing)
+
+		this.testPromise.resolve();
+		scope.$apply();
+
+		expect(this.element.children().css('display')).toBe('none'); //ensure its now invisible as the promise is resolved
+	});
+
 	it('should show the overlay during multiple promises', function() {
 
 		this.element = compile('<div cg-busy="[my_promise,my_promise2]"></div>')(scope);
